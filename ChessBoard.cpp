@@ -1237,8 +1237,8 @@ void ChessBoard::move(Move & move)
 				break;
 			}
 		default:
-			this->square[move.from] = EMPTY;
-			this->square[move.to] = SET_MOVED(move.figure);
+			this->square[(int)move.from] = EMPTY;
+			this->square[(int)move.to] = SET_MOVED(move.figure);
 			break;
 	}
 }
@@ -1257,8 +1257,8 @@ void ChessBoard::undoMove(Move & move)
 				break;
 			}
 		default:
-			this->square[move.from] = move.figure;
-			this->square[move.to] = move.capture;
+			this->square[(int)move.from] = move.figure;
+			this->square[(int)move.to] = move.capture;
 			break;
 	}
 }
@@ -1284,20 +1284,20 @@ void ChessBoard::movePawn(Move & move)
 		}
 	}
 
-	this->square[move.from] = EMPTY;
+	this->square[(int)move.from] = EMPTY;
 
 	// mind pawn promotion
 	if(IS_BLACK(move.figure)) {
 		if(move.to / 8 == 0)
-			this->square[move.to] = SET_MOVED(SET_BLACK(QUEEN));
+			this->square[(int)move.to] = SET_MOVED(SET_BLACK(QUEEN));
 		else
-			this->square[move.to] = SET_MOVED(move.figure);
+			this->square[(int)move.to] = SET_MOVED(move.figure);
 	}
 	else {
 		if(move.to / 8 == 7)
-			this->square[move.to] = SET_MOVED(QUEEN);
+			this->square[(int)move.to] = SET_MOVED(QUEEN);
 		else
-			this->square[move.to] = SET_MOVED(move.figure);
+			this->square[(int)move.to] = SET_MOVED(move.figure);
 	}
 }
 
@@ -1305,7 +1305,7 @@ void ChessBoard::undoMovePawn(Move & move)
 {
 	int capture_field;
 
-	this->square[move.from] = CLEAR_PASSANT(move.figure);
+	this->square[(int)move.from] = CLEAR_PASSANT(move.figure);
 
 	// check for en-passant capture
 	if(IS_PASSANT(move.capture))
@@ -1315,10 +1315,10 @@ void ChessBoard::undoMovePawn(Move & move)
 			capture_field = move.to + 8;
 			if(move.from / 8 == 3) {
 				this->square[capture_field] = move.capture;
-				this->square[move.to] = EMPTY;
+				this->square[(int)move.to] = EMPTY;
 			}
 			else {
-				this->square[move.to] = move.capture;
+				this->square[(int)move.to] = move.capture;
 			}
 		}
 		else
@@ -1326,16 +1326,16 @@ void ChessBoard::undoMovePawn(Move & move)
 			capture_field = move.to - 8;
 			if(move.from / 8 == 4) {
 				this->square[capture_field] = move.capture;
-				this->square[move.to] = EMPTY;
+				this->square[(int)move.to] = EMPTY;
 			}
 			else {
-				this->square[move.to] = move.capture;
+				this->square[(int)move.to] = move.capture;
 			}
 		}
 	}
 	else
 	{
-		this->square[move.to] = move.capture;
+		this->square[(int)move.to] = move.capture;
 	}
 }
 
@@ -1368,8 +1368,8 @@ void ChessBoard::moveKing(Move & move)
 	}
 
 	// regular move
-	this->square[move.from] = EMPTY;
-	this->square[move.to] = SET_MOVED(move.figure);
+	this->square[(int)move.from] = EMPTY;
+	this->square[(int)move.to] = SET_MOVED(move.figure);
 	
 	// update king position variable
 	if(IS_BLACK(move.figure)) {
@@ -1411,8 +1411,8 @@ void ChessBoard::undoMoveKing(Move & move)
 	}
 
 	// regular undo
-	this->square[move.from] = move.figure;
-	this->square[move.to] = move.capture;
+	this->square[(int)move.from] = move.figure;
+	this->square[(int)move.to] = move.capture;
 
 	// update king position variable
 	if(IS_BLACK(move.figure)) {

@@ -57,7 +57,7 @@ struct Move
 	*/
 	void print(void) {
 
-		char * field_name[] = {
+		const char * field_name[] = {
 			"A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1",
 			"A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2",
 			"A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3",
@@ -94,7 +94,7 @@ struct Move
 				break;
 		}
 		
-		printf("from %s to %s:\n", field_name[from], field_name[to]);
+		printf("from %s to %s:\n", field_name[(int)from], field_name[(int)to]);
 	}
 	
 	bool operator==(Move & b) {
