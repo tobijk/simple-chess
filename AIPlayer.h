@@ -43,7 +43,7 @@ class AIPlayer: public ChessPlayer {
 		/*
 		* MinMax search for best possible outcome
 		*/ 
-		int evalAlphaBeta(ChessBoard & board, int color, int depth, int alpha, int beta);
+		int evalAlphaBeta(ChessBoard & board, int color, int depth, int alpha, int beta, bool quiescent);
 
 		/*
 		* For now, this checks only material

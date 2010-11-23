@@ -4,7 +4,8 @@ bool AIPlayer::getMove(ChessBoard & board, Move & move)
 {
 	LinkedList<Move> regulars, nulls, candidates;
 	ListIterator<Move> iter;
-	int best, tmp, depth;
+        bool quiescent = false;
+	int best, tmp;
 
 	// first assume we are loosing
 	best = -KING_VALUE;
@@ -29,15 +30,12 @@ bool AIPlayer::getMove(ChessBoard & board, Move & move)
 		// check if own king is vulnerable now
 		if(!board.isVulnerable((this->color ? board.black_king_pos : board.white_king_pos), this->color)) {
 
-			if(((*iter)->value).capture == EMPTY) {
-				depth = this->search_depth - 1;
-			}
-			else { // captures need even number of plies search depth
-				depth = this->search_depth % 2 ? this->search_depth : this->search_depth - 1;
+			if(((*iter)->value).capture != EMPTY) {
+                            quiescent = true;
 			}
 
 			// recursion
-			tmp = -evalAlphaBeta(board, TOGGLE_COLOR(this->color), depth, -WIN_VALUE, -best);
+			tmp = -evalAlphaBeta(board, TOGGLE_COLOR(this->color), this->search_depth - 1, -WIN_VALUE, -best, quiescent);
 			if(tmp > best) {
 				best = tmp;
 				candidates.clear();
@@ -62,7 +60,6 @@ bool AIPlayer::getMove(ChessBoard & board, Move & move)
 
 	// loosing the game?
 	if(best < -WIN_VALUE) {
-		printf("Black player: \"I think i'm loosing...\"\n");
 		return false;
 	}
 	else {
@@ -73,13 +70,13 @@ bool AIPlayer::getMove(ChessBoard & board, Move & move)
 }
 
 
-int AIPlayer::evalAlphaBeta(ChessBoard & board, int color, int search_depth, int alpha, int beta)
+int AIPlayer::evalAlphaBeta(ChessBoard & board, int color, int search_depth, int alpha, int beta, bool quiescent)
 {
 	LinkedList<Move> regulars, nulls;
 	ListIterator<Move> iter;
 	int best, tmp;
 
-	if(search_depth <= 0) {
+	if(search_depth <= 0 && !quiescent) {
 		if(color)
 			return -evaluateBoard(board);
 		else
@@ -109,8 +106,15 @@ int AIPlayer::evalAlphaBeta(ChessBoard & board, int color, int search_depth, int
 		// check if own king is vulnerable now
 		if(!board.isVulnerable((color ? board.black_king_pos : board.white_king_pos), color)) {
 
+			if(((*iter)->value).capture == EMPTY) {
+                            quiescent = false;
+			}
+                        else {
+                            quiescent = true;
+                        }
+
 			// recursion 'n' pruning
-			tmp = -evalAlphaBeta(board, TOGGLE_COLOR(color), search_depth - 1, -beta, -alpha);
+			tmp = -evalAlphaBeta(board, TOGGLE_COLOR(color), search_depth - 1, -beta, -alpha, quiescent);
 			if(tmp > best) {
 				best = tmp;
 				if(tmp > alpha) {
