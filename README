@@ -1,0 +1,15 @@
+SIMPLE CHESS
+
+A basic Chess AI using min-max search with alpha-beta pruning and a simplistic
+approach to quiescent search.
+
+
+COMPILE
+
+g++ -O2 -o chess *.cpp
+
+
+PLAY
+
+Enter your moves concatenating field names, e.g. 'b2b4'.
+
