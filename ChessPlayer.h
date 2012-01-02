@@ -7,7 +7,10 @@ class ChessPlayer
 {
 	public:
 
-		ChessPlayer(){};
+		ChessPlayer(int color)
+		 : color(color)
+		{};
+
 		virtual ~ChessPlayer(){};
 		
 		/*

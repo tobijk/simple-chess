@@ -1,4 +1,16 @@
+#include <cstdlib>
+#include <ctime>
 #include "AIPlayer.h"
+
+AIPlayer::AIPlayer(int color, int search_depth)
+ : ChessPlayer(color),
+   search_depth(search_depth)
+{
+	srand(time(NULL));
+}
+
+AIPlayer::~AIPlayer()
+{}
 
 bool AIPlayer::getMove(ChessBoard & board, Move & move)
 {

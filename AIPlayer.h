@@ -1,7 +1,6 @@
 #ifndef AI_PLAYER_H_INCLUDED
 #define AI_PLAYER_H_INCLUDED
 
-#include "time.h"
 #include "ChessBoard.h"
 #include "ChessPlayer.h"
 
@@ -19,17 +18,10 @@ class AIPlayer: public ChessPlayer {
 
 	public:
 	
-		AIPlayer(){};
+		AIPlayer(int color, int search_depth);
 
-		AIPlayer(int color, int search_depth)
-		{
-			this->color = color;
-			this->search_depth = search_depth;
-			srand(time(NULL));
-		}
-		
-		~AIPlayer(){};
-		
+		~AIPlayer();
+
 		/*
 		* Ask player what to do next
 		*/

@@ -1,3 +1,5 @@
+#include <cstdio>
+#include <cstring>
 #include "ChessBoard.h"
 
 ChessBoard::ChessBoard()

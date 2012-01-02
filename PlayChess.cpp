@@ -1,6 +1,6 @@
 //#include <mcheck.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include "LinkedList.h"
 #include "ChessBoard.h"
 #include "HumanPlayer.h"

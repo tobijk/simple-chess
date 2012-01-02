@@ -1,8 +1,6 @@
 #ifndef CHESS_BOARD_H_INCLUDED
 #define CHESS_BOARD_H_INCLUDED
 
-#include <stdio.h>
-#include <string.h>
 #include "LinkedList.h"
 
 // Pieces defined in lower 4 bits

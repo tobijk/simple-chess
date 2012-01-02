@@ -1,4 +1,12 @@
+#include <cctype>
 #include "HumanPlayer.h"
+
+HumanPlayer::HumanPlayer(int color)
+ : ChessPlayer(color)
+{}
+
+HumanPlayer::~HumanPlayer()
+{}
 
 bool HumanPlayer::getMove(ChessBoard & board, Move & move)
 {
