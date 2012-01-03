@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <list>
 #include <cctype>
+#include <cstring>
 #include "HumanPlayer.h"
 #include "ChessBoard.h"
 
@@ -130,6 +131,9 @@ bool HumanPlayer::processInput(char * buf, Move & move)
 			i++;
 		}
 	}
+
+	if(strncmp(&buf[i], "quit", 4) == 0)
+		exit(0);
 
 	// convert from sth. like "b1c3"	
 	for(j = 0; j < 2; j++) {
