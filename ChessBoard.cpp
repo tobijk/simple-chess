@@ -3,7 +3,7 @@
 #include <list>
 #include "ChessBoard.h"
 
-void Move::print(void) {
+void Move::print(void) const {
 
 	const char * field_name[] = {
 		"A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1",
@@ -45,7 +45,7 @@ void Move::print(void) {
 	printf("from %s to %s:\n", field_name[(int)from], field_name[(int)to]);
 }
 
-bool Move::operator==(Move & b)
+bool Move::operator==(const Move & b) const
 {
 	if(from != b.from)
 		return false;
@@ -65,7 +65,7 @@ ChessBoard::ChessBoard()
 	memset((void*)square, EMPTY, sizeof(square));
 }
 
-void ChessBoard::print(void)
+void ChessBoard::print(void) const
 {
 	char figure;
 	int repr, unmoved, passant, row, col;
@@ -87,7 +87,7 @@ void ChessBoard::print(void)
 	printf("  A   B   C   D   E   F   G   H  \n");
 }
 
-char ChessBoard::getASCIIrepr(int figure)
+char ChessBoard::getASCIIrepr(int figure) const
 {
 	switch(FIGURE(figure))
 	{
@@ -192,7 +192,7 @@ void ChessBoard::getMoves(int color, list<Move> & moves, list<Move> & captures, 
 	}
 }
 
-void ChessBoard::getPawnMoves(int figure, int pos, list<Move> & moves, list<Move> & captures, list<Move>  & null_moves)
+void ChessBoard::getPawnMoves(int figure, int pos, list<Move> & moves, list<Move> & captures, list<Move>  & null_moves) const
 {
 	Move new_move;
 	int target_pos, target_figure;
@@ -310,7 +310,7 @@ void ChessBoard::getPawnMoves(int figure, int pos, list<Move> & moves, list<Move
 	}	
 }
 
-void ChessBoard::getRookMoves(int figure, int pos, list<Move> & moves, list<Move> & captures)
+void ChessBoard::getRookMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const
 {
 	Move new_move;
 	int target_pos, target_figure, end;
@@ -408,7 +408,7 @@ void ChessBoard::getRookMoves(int figure, int pos, list<Move> & moves, list<Move
 	}
 }
 
-void ChessBoard::getKnightMoves(int figure, int pos, list<Move> & moves, list<Move> & captures)
+void ChessBoard::getKnightMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const
 {
 	Move new_move;
 	int target_pos, target_figure, row, col;
@@ -614,7 +614,7 @@ void ChessBoard::getKnightMoves(int figure, int pos, list<Move> & moves, list<Mo
 	}	
 }
 
-void ChessBoard::getBishopMoves(int figure, int pos, list<Move> & moves, list<Move> & captures)
+void ChessBoard::getBishopMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const
 {
 	Move new_move;
 	int target_pos, target_figure, row, col, i, j;
@@ -720,7 +720,7 @@ void ChessBoard::getBishopMoves(int figure, int pos, list<Move> & moves, list<Mo
 	}
 }
 
-void ChessBoard::getQueenMoves(int figure, int pos, list<Move> & moves, list<Move> & captures)
+void ChessBoard::getQueenMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const
 {
 	// Queen is just the "cartesian product" of Rook and Bishop
 	this->getRookMoves(figure, pos, moves, captures);
@@ -964,7 +964,7 @@ void ChessBoard::getKingMoves(int figure, int pos, list<Move> & moves, list<Move
 	}
 }
 
-bool ChessBoard::isVulnerable(int pos, int figure)
+bool ChessBoard::isVulnerable(int pos, int figure) const
 {
 	int target_pos, target_figure, row, col, i,j, end;
 
@@ -1283,7 +1283,7 @@ bool ChessBoard::isVulnerable(int pos, int figure)
 	return false;
 }
 
-void ChessBoard::move(Move & move)
+void ChessBoard::move(const Move & move)
 {
 	// kings and pawns receive special treatment
 	switch(FIGURE(move.figure))
@@ -1303,7 +1303,7 @@ void ChessBoard::move(Move & move)
 	}
 }
 
-void ChessBoard::undoMove(Move & move)
+void ChessBoard::undoMove(const Move & move)
 {
 	// kings and pawns receive special treatment
 	switch(FIGURE(move.figure))
@@ -1323,7 +1323,7 @@ void ChessBoard::undoMove(Move & move)
 	}
 }
 
-void ChessBoard::movePawn(Move & move)
+void ChessBoard::movePawn(const Move & move)
 {
 	int capture_field;
 
@@ -1361,7 +1361,7 @@ void ChessBoard::movePawn(Move & move)
 	}
 }
 
-void ChessBoard::undoMovePawn(Move & move)
+void ChessBoard::undoMovePawn(const Move & move)
 {
 	int capture_field;
 
@@ -1399,7 +1399,7 @@ void ChessBoard::undoMovePawn(Move & move)
 	}
 }
 
-void ChessBoard::moveKing(Move & move)
+void ChessBoard::moveKing(const Move & move)
 {
 	// check for castling
 	if(!IS_MOVED(move.figure))
@@ -1440,7 +1440,7 @@ void ChessBoard::moveKing(Move & move)
 	}
 }
 
-void ChessBoard::undoMoveKing(Move & move)
+void ChessBoard::undoMoveKing(const Move & move)
 {
 	// check for castling
 	if(!IS_MOVED(move.figure))

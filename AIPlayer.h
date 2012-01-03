@@ -26,17 +26,17 @@ class AIPlayer: public ChessPlayer {
 		/*
 		* Ask player what to do next
 		*/
-		bool getMove(ChessBoard & board, Move & move);
+		bool getMove(ChessBoard & board, Move & move) const;
 
 		/*
 		* MinMax search for best possible outcome
 		*/ 
-		int evalAlphaBeta(ChessBoard & board, int color, int depth, int alpha, int beta, bool quiescent);
+		int evalAlphaBeta(ChessBoard & board, int color, int depth, int alpha, int beta, bool quiescent) const;
 
 		/*
 		* For now, this checks only material
 		*/
-		int evaluateBoard(ChessBoard & board);
+		int evaluateBoard(const ChessBoard & board) const;
 	
 	protected:
 

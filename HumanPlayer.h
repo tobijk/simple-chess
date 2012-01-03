@@ -17,17 +17,17 @@ class HumanPlayer: public ChessPlayer {
 		/*
 		* Ask player what to do
 		*/
-		bool getMove(ChessBoard & board, Move & move);
+		bool getMove(ChessBoard & board, Move & move) const;
 		
 		/*
 		* Read input from stdin
 		*/
-		char * readInput(void);
+		char * readInput(void) const;
 		
 		/*
 		* Process input. Frees buffer allocated by readInput()
 		*/
-		bool processInput(char * buf, Move & move);
+		bool processInput(char * buf, Move & move) const;
 
 };
 

@@ -17,7 +17,7 @@ class ChessPlayer
 		/*
 		* Ask player what to do next
 		*/
-		virtual bool getMove(ChessBoard & board, Move & move) = 0;
+		virtual bool getMove(ChessBoard & board, Move & move) const = 0;
 
 	protected:
 

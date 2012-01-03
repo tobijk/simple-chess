@@ -15,7 +15,7 @@ AIPlayer::AIPlayer(int color, int search_depth)
 AIPlayer::~AIPlayer()
 {}
 
-bool AIPlayer::getMove(ChessBoard & board, Move & move)
+bool AIPlayer::getMove(ChessBoard & board, Move & move) const
 {
 	list<Move> regulars, nulls;
 	vector<Move> candidates;
@@ -76,7 +76,7 @@ bool AIPlayer::getMove(ChessBoard & board, Move & move)
 	}
 }
 
-int AIPlayer::evalAlphaBeta(ChessBoard & board, int color, int search_depth, int alpha, int beta, bool quiescent)
+int AIPlayer::evalAlphaBeta(ChessBoard & board, int color, int search_depth, int alpha, int beta, bool quiescent) const
 {
 	list<Move> regulars, nulls;
 	int best, tmp;
@@ -134,7 +134,7 @@ int AIPlayer::evalAlphaBeta(ChessBoard & board, int color, int search_depth, int
 	return best;
 }
 
-int AIPlayer::evaluateBoard(ChessBoard & board)
+int AIPlayer::evaluateBoard(const ChessBoard & board) const
 {
 	int figure, pos, sum = 0, summand;
 

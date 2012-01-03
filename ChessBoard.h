@@ -53,12 +53,12 @@ struct Move
 	/*
 	* Prints sth. like "Black queen from D8 to D7."
 	*/
-	void print(void);
+	void print(void) const;
 	
 	/*
 	* True if moves are equal.
 	*/
-	bool operator==(Move & b);
+	bool operator==(const Move & b) const;
 
 	char figure;	// figure which is moved
 	char from, to;	// board is seen one-dimensional
@@ -74,12 +74,12 @@ class ChessBoard
 		/*
 		* Print ASCII representation of board.
 		*/
-		void print(void);
+		void print(void) const;
 
 		/*
 		* Returns an ASCII char representing the figure.
 		*/
-		char getASCIIrepr(int figure);
+		char getASCIIrepr(int figure) const;
 
 		/*
 		* Initialize board for a normal game.
@@ -94,27 +94,27 @@ class ChessBoard
 		/*
 		* All possible moves for a pawn piece.
 		*/
-		void getPawnMoves(int figure, int pos, list<Move> & moves, list<Move> & captures, list<Move> & null_moves);
+		void getPawnMoves(int figure, int pos, list<Move> & moves, list<Move> & captures, list<Move> & null_moves) const;
 		
 		/*
 		* All possible moves for a rook piece.
 		*/
-		void getRookMoves(int figure, int pos, list<Move> & moves, list<Move> & captures);
+		void getRookMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
 		
 		/*
 		* All possible moves for a knight piece.
 		*/
-		void getKnightMoves(int figure, int pos, list<Move> & moves, list<Move> & captures);
+		void getKnightMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
 		
 		/*
 		* All possible moves for a bishop piece.
 		*/
-		void getBishopMoves(int figure, int pos, list<Move> & moves, list<Move> & captures);
+		void getBishopMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
 		
 		/*
 		* All possible moves for a queen piece.
 		*/
-		void getQueenMoves(int figure, int pos, list<Move> & moves, list<Move> & captures);
+		void getQueenMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
 
 		/*
 		* All possible moves for a king piece.
@@ -126,19 +126,19 @@ class ChessBoard
 		* This is used to determine if castling is legal or if kings are in check.
 		* En passant is not taken into account.
 		*/
-		bool isVulnerable(int pos, int color);
+		bool isVulnerable(int pos, int color) const;
 
 		/*
 		* Move and undo moves
 		*/
-		void move(Move & move);
-		void undoMove(Move & move);
+		void move(const Move & move);
+		void undoMove(const Move & move);
 
-		void movePawn(Move & move);
-		void undoMovePawn(Move & move);
+		void movePawn(const Move & move);
+		void undoMovePawn(const Move & move);
 
-		void moveKing(Move & move);
-		void undoMoveKing(Move & move);
+		void moveKing(const Move & move);
+		void undoMoveKing(const Move & move);
 
 		// THE BOARD ITSELF
 		char square[8*8];

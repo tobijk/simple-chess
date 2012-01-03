@@ -13,7 +13,7 @@ HumanPlayer::HumanPlayer(int color)
 HumanPlayer::~HumanPlayer()
 {}
 
-bool HumanPlayer::getMove(ChessBoard & board, Move & move)
+bool HumanPlayer::getMove(ChessBoard & board, Move & move) const
 {
 	list<Move> regulars, nulls;
 	char * input;
@@ -78,7 +78,7 @@ bool HumanPlayer::getMove(ChessBoard & board, Move & move)
 	return true;
 }
 
-char * HumanPlayer::readInput(void)
+char * HumanPlayer::readInput(void) const
 {
 	int buffsize = 8, c, i;
 	char * buffer, * tmp;
@@ -114,7 +114,7 @@ char * HumanPlayer::readInput(void)
 	return buffer;	
 }
 
-bool HumanPlayer::processInput(char * buf, Move & move)
+bool HumanPlayer::processInput(char * buf, Move & move) const
 {
 	int i = 0, j, l, n;
 
