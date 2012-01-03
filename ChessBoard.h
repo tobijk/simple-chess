@@ -54,98 +54,96 @@ struct Move
 	char capture;	// piece that resides at destination square
 };
 
-class ChessBoard
+struct ChessBoard
 {
-	public:
+	enum Position {
+		A1 = 0, B1, C1, D1, E1, F1, G1, H1,
+		A2, B2, C2, D2, E2, F2, G2, H2,
+		A3, B3, C3, D3, E3, F3, G3, H3,
+		A4, B4, C4, D4, E4, F4, G4, H4,
+		A5, B5, C5, D5, E5, F5, G5, H5,
+		A6, B6, C6, D6, E6, F6, G6, H6,
+		A7, B7, C7, D7, E7, F7, G7, H7,
+		A8, B8, C8, D8, E8, F8, G8, H8
+	};
 
-		enum Position {
-			A1 = 0, B1, C1, D1, E1, F1, G1, H1,
-			A2, B2, C2, D2, E2, F2, G2, H2,
-			A3, B3, C3, D3, E3, F3, G3, H3,
-			A4, B4, C4, D4, E4, F4, G4, H4,
-			A5, B5, C5, D5, E5, F5, G5, H5,
-			A6, B6, C6, D6, E6, F6, G6, H6,
-			A7, B7, C7, D7, E7, F7, G7, H7,
-			A8, B8, C8, D8, E8, F8, G8, H8
-		};
+	ChessBoard();
 
-		ChessBoard();
+	/*
+	* Print ASCII representation of board.
+	*/
+	void print(void) const;
 
-		/*
-		* Print ASCII representation of board.
-		*/
-		void print(void) const;
+	/*
+	* Returns an ASCII char representing the figure.
+	*/
+	char getASCIIrepr(int figure) const;
 
-		/*
-		* Returns an ASCII char representing the figure.
-		*/
-		char getASCIIrepr(int figure) const;
+	/*
+	* Initialize board for a normal game.
+	*/
+	void initDefaultSetup(void);
 
-		/*
-		* Initialize board for a normal game.
-		*/
-		void initDefaultSetup(void);
+	/*
+	* Generates all moves for one side.
+	*/
+	void getMoves(int color, list<Move> & moves, list<Move> & captures, list<Move> & null_moves);
 
-		/*
-		* Generates all moves for one side.
-		*/
-		void getMoves(int color, list<Move> & moves, list<Move> & captures, list<Move> & null_moves);
+	/*
+	* All possible moves for a pawn piece.
+	*/
+	void getPawnMoves(int figure, int pos, list<Move> & moves, list<Move> & captures, list<Move> & null_moves) const;
+	
+	/*
+	* All possible moves for a rook piece.
+	*/
+	void getRookMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
+	
+	/*
+	* All possible moves for a knight piece.
+	*/
+	void getKnightMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
+	
+	/*
+	* All possible moves for a bishop piece.
+	*/
+	void getBishopMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
+	
+	/*
+	* All possible moves for a queen piece.
+	*/
+	void getQueenMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
 
-		/*
-		* All possible moves for a pawn piece.
-		*/
-		void getPawnMoves(int figure, int pos, list<Move> & moves, list<Move> & captures, list<Move> & null_moves) const;
-		
-		/*
-		* All possible moves for a rook piece.
-		*/
-		void getRookMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
-		
-		/*
-		* All possible moves for a knight piece.
-		*/
-		void getKnightMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
-		
-		/*
-		* All possible moves for a bishop piece.
-		*/
-		void getBishopMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
-		
-		/*
-		* All possible moves for a queen piece.
-		*/
-		void getQueenMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
+	/*
+	* All possible moves for a king piece.
+	*/
+	void getKingMoves(int figure, int pos, list<Move> & moves, list<Move> & captures);
 
-		/*
-		* All possible moves for a king piece.
-		*/
-		void getKingMoves(int figure, int pos, list<Move> & moves, list<Move> & captures);
+	/*
+	* Returns true, if this square is vulnerable to the opponent.
+	* This is used to determine if castling is legal or if kings are in check.
+	* En passant is not taken into account.
+	*/
+	bool isVulnerable(int pos, int color) const;
 
-		/*
-		* Returns true, if this square is vulnerable to the opponent.
-		* This is used to determine if castling is legal or if kings are in check.
-		* En passant is not taken into account.
-		*/
-		bool isVulnerable(int pos, int color) const;
+	/*
+	* Move and undo moves
+	*/
+	void move(const Move & move);
+	void undoMove(const Move & move);
 
-		/*
-		* Move and undo moves
-		*/
-		void move(const Move & move);
-		void undoMove(const Move & move);
+	void movePawn(const Move & move);
+	void undoMovePawn(const Move & move);
 
-		void movePawn(const Move & move);
-		void undoMovePawn(const Move & move);
+	void moveKing(const Move & move);
+	void undoMoveKing(const Move & move);
 
-		void moveKing(const Move & move);
-		void undoMoveKing(const Move & move);
+	// THE BOARD ITSELF
+	char square[8*8];
 
-		// THE BOARD ITSELF
-		char square[8*8];
-
-		// to keep track of the kings
-		char black_king_pos;
-		char white_king_pos;
+	// to keep track of the kings
+	char black_king_pos;
+	char white_king_pos;
 };
 
 #endif
