@@ -1,7 +1,8 @@
 #ifndef CHESS_PLAYER_H_INCLUDED
 #define CHESS_PLAYER_H_INCLUDED
 
-#include "ChessBoard.h"
+class ChessBoard;
+class Move;
 
 class ChessPlayer
 {

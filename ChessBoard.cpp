@@ -1,6 +1,64 @@
 #include <cstdio>
 #include <cstring>
+#include <list>
 #include "ChessBoard.h"
+
+void Move::print(void) {
+
+	const char * field_name[] = {
+		"A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1",
+		"A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2",
+		"A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3",
+		"A4", "B4", "C4", "D4", "E4", "F4", "G4", "H4",
+		"A5", "B5", "C5", "D5", "E5", "F5", "G5", "H5",
+		"A6", "B6", "C6", "D6", "E6", "F6", "G6", "H6",
+		"A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7",
+		"A8", "B8", "C8", "D8", "E8", "F8", "G8", "H8"
+	};		
+
+	if(IS_BLACK(figure))
+		printf("\n\n   Black ");
+	else 
+		printf("\n\n   White ");
+
+	switch(FIGURE(figure)) {
+		case PAWN:
+			printf("pawn ");
+			break;
+		case ROOK:
+			printf("rook ");
+			break;
+		case KNIGHT:
+			printf("knight ");
+			break;
+		case BISHOP:
+			printf("bishop ");
+			break;
+		case QUEEN:
+			printf("queen ");
+			break;
+		case KING:
+			printf("king ");
+			break;
+	}
+	
+	printf("from %s to %s:\n", field_name[(int)from], field_name[(int)to]);
+}
+
+bool Move::operator==(Move & b)
+{
+	if(from != b.from)
+		return false;
+	if(to != b.to)
+		return false;
+	if(capture != b.capture)
+		return false;
+	if(figure != b.figure)
+		return false;
+		
+	return true;
+}
+
 
 ChessBoard::ChessBoard()
 {
@@ -96,7 +154,7 @@ void ChessBoard::initDefaultSetup(void)
 	white_king_pos = E1;
 }
 
-void ChessBoard::getMoves(int color, LinkedList<Move> & moves, LinkedList<Move> & captures, LinkedList<Move> & null_moves)
+void ChessBoard::getMoves(int color, list<Move> & moves, list<Move> & captures, list<Move> & null_moves)
 {
 	int pos, figure;
 	
@@ -134,7 +192,7 @@ void ChessBoard::getMoves(int color, LinkedList<Move> & moves, LinkedList<Move> 
 	}
 }
 
-void ChessBoard::getPawnMoves(int figure, int pos, LinkedList<Move> & moves, LinkedList<Move> & captures, LinkedList<Move>  & null_moves)
+void ChessBoard::getPawnMoves(int figure, int pos, list<Move> & moves, list<Move> & captures, list<Move>  & null_moves)
 {
 	Move new_move;
 	int target_pos, target_figure;
@@ -147,7 +205,7 @@ void ChessBoard::getPawnMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 		new_move.from = pos;
 		new_move.to = pos;
 		new_move.capture = figure;
-		null_moves.append(new_move);
+		null_moves.push_back(new_move);
 		
 		figure = CLEAR_PASSANT(figure);
 	}
@@ -164,7 +222,7 @@ void ChessBoard::getPawnMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 		{
 			new_move.to = target_pos;
 			new_move.capture = target_figure;
-			moves.append(new_move);
+			moves.push_back(new_move);
 			
 			// 2. Two steps ahead if unmoved
 			if(!IS_MOVED(figure))
@@ -179,7 +237,7 @@ void ChessBoard::getPawnMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 
 						// set passant attribute and clear it later
 						new_move.figure = SET_PASSANT(figure);
-						moves.append(new_move);
+						moves.push_back(new_move);
 						new_move.figure = figure;
 					}
 				}
@@ -199,7 +257,7 @@ void ChessBoard::getPawnMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 				{
 					new_move.to = target_pos;
 					new_move.capture = target_figure;
-					captures.append(new_move);
+					captures.push_back(new_move);
 				}
 			}
 			else
@@ -212,7 +270,7 @@ void ChessBoard::getPawnMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 					{
 						new_move.to = target_pos;
 						new_move.capture = target_figure;
-						captures.append(new_move);
+						captures.push_back(new_move);
 					}				
 				}
 			}
@@ -231,7 +289,7 @@ void ChessBoard::getPawnMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 				{
 					new_move.to = target_pos;
 					new_move.capture = target_figure;
-					captures.append(new_move);
+					captures.push_back(new_move);
 				}
 			}
 			else
@@ -244,7 +302,7 @@ void ChessBoard::getPawnMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 					{
 						new_move.to = target_pos;
 						new_move.capture = target_figure;
-						captures.append(new_move);
+						captures.push_back(new_move);
 					}				
 				}
 			}
@@ -252,7 +310,7 @@ void ChessBoard::getPawnMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 	}	
 }
 
-void ChessBoard::getRookMoves(int figure, int pos, LinkedList<Move> & moves, LinkedList<Move> & captures)
+void ChessBoard::getRookMoves(int figure, int pos, list<Move> & moves, list<Move> & captures)
 {
 	Move new_move;
 	int target_pos, target_figure, end;
@@ -270,7 +328,7 @@ void ChessBoard::getRookMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 			{
 				new_move.to = target_pos;
 				new_move.capture = target_figure;
-				captures.append(new_move);
+				captures.push_back(new_move);
 			}
 			
 			break;
@@ -279,7 +337,7 @@ void ChessBoard::getRookMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 		{
 			new_move.to = target_pos;
 			new_move.capture = target_figure;
-			moves.append(new_move);
+			moves.push_back(new_move);
 		}
 	}
 
@@ -292,7 +350,7 @@ void ChessBoard::getRookMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 			{
 				new_move.to = target_pos;
 				new_move.capture = target_figure;
-				captures.append(new_move);
+				captures.push_back(new_move);
 			}
 			
 			break;
@@ -301,7 +359,7 @@ void ChessBoard::getRookMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 		{
 			new_move.to = target_pos;
 			new_move.capture = target_figure;
-			moves.append(new_move);
+			moves.push_back(new_move);
 		}
 	}
 
@@ -314,7 +372,7 @@ void ChessBoard::getRookMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 			{
 				new_move.to = target_pos;
 				new_move.capture = target_figure;
-				captures.append(new_move);
+				captures.push_back(new_move);
 			}
 			
 			break;
@@ -323,7 +381,7 @@ void ChessBoard::getRookMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 		{
 			new_move.to = target_pos;
 			new_move.capture = target_figure;
-			moves.append(new_move);
+			moves.push_back(new_move);
 		}
 	}
 
@@ -336,7 +394,7 @@ void ChessBoard::getRookMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 			{
 				new_move.to = target_pos;
 				new_move.capture = target_figure;
-				captures.append(new_move);
+				captures.push_back(new_move);
 			}
 			
 			break;
@@ -345,12 +403,12 @@ void ChessBoard::getRookMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 		{
 			new_move.to = target_pos;
 			new_move.capture = target_figure;
-			moves.append(new_move);
+			moves.push_back(new_move);
 		}
 	}
 }
 
-void ChessBoard::getKnightMoves(int figure, int pos, LinkedList<Move> & moves, LinkedList<Move> & captures)
+void ChessBoard::getKnightMoves(int figure, int pos, list<Move> & moves, list<Move> & captures)
 {
 	Move new_move;
 	int target_pos, target_figure, row, col;
@@ -377,14 +435,14 @@ void ChessBoard::getKnightMoves(int figure, int pos, LinkedList<Move> & moves, L
 				{
 					new_move.capture = target_figure;
 					new_move.to = target_pos;
-					captures.append(new_move);
+					captures.push_back(new_move);
 				}
 			}
 			else
 			{
 				new_move.capture = target_figure;
 				new_move.to = target_pos;
-				moves.append(new_move);
+				moves.push_back(new_move);
 			}
 		}
 		
@@ -399,14 +457,14 @@ void ChessBoard::getKnightMoves(int figure, int pos, LinkedList<Move> & moves, L
 				{
 					new_move.capture = target_figure;
 					new_move.to = target_pos;
-					captures.append(new_move);
+					captures.push_back(new_move);
 				}
 			}
 			else
 			{
 				new_move.capture = target_figure;
 				new_move.to = target_pos;
-				moves.append(new_move);
+				moves.push_back(new_move);
 			}		
 		}
 	}
@@ -425,14 +483,14 @@ void ChessBoard::getKnightMoves(int figure, int pos, LinkedList<Move> & moves, L
 				{
 					new_move.capture = target_figure;
 					new_move.to = target_pos;
-					captures.append(new_move);
+					captures.push_back(new_move);
 				}
 			}
 			else
 			{
 				new_move.capture = target_figure;
 				new_move.to = target_pos;
-				moves.append(new_move);
+				moves.push_back(new_move);
 			}
 		}
 		
@@ -447,14 +505,14 @@ void ChessBoard::getKnightMoves(int figure, int pos, LinkedList<Move> & moves, L
 				{
 					new_move.capture = target_figure;
 					new_move.to = target_pos;
-					captures.append(new_move);
+					captures.push_back(new_move);
 				}
 			}
 			else
 			{
 				new_move.capture = target_figure;
 				new_move.to = target_pos;
-				moves.append(new_move);
+				moves.push_back(new_move);
 			}		
 		}
 	}
@@ -473,14 +531,14 @@ void ChessBoard::getKnightMoves(int figure, int pos, LinkedList<Move> & moves, L
 				{
 					new_move.capture = target_figure;
 					new_move.to = target_pos;
-					captures.append(new_move);
+					captures.push_back(new_move);
 				}
 			}
 			else
 			{
 				new_move.capture = target_figure;
 				new_move.to = target_pos;
-				moves.append(new_move);
+				moves.push_back(new_move);
 			}
 		}
 		
@@ -495,14 +553,14 @@ void ChessBoard::getKnightMoves(int figure, int pos, LinkedList<Move> & moves, L
 				{
 					new_move.capture = target_figure;
 					new_move.to = target_pos;
-					captures.append(new_move);
+					captures.push_back(new_move);
 				}
 			}
 			else
 			{
 				new_move.capture = target_figure;
 				new_move.to = target_pos;
-				moves.append(new_move);
+				moves.push_back(new_move);
 			}		
 		}
 	}
@@ -521,14 +579,14 @@ void ChessBoard::getKnightMoves(int figure, int pos, LinkedList<Move> & moves, L
 				{
 					new_move.capture = target_figure;
 					new_move.to = target_pos;
-					captures.append(new_move);
+					captures.push_back(new_move);
 				}
 			}
 			else
 			{
 				new_move.capture = target_figure;
 				new_move.to = target_pos;
-				moves.append(new_move);
+				moves.push_back(new_move);
 			}
 		}
 		
@@ -543,20 +601,20 @@ void ChessBoard::getKnightMoves(int figure, int pos, LinkedList<Move> & moves, L
 				{
 					new_move.capture = target_figure;
 					new_move.to = target_pos;
-					captures.append(new_move);
+					captures.push_back(new_move);
 				}
 			}
 			else
 			{
 				new_move.capture = target_figure;
 				new_move.to = target_pos;
-				moves.append(new_move);
+				moves.push_back(new_move);
 			}		
 		}
 	}	
 }
 
-void ChessBoard::getBishopMoves(int figure, int pos, LinkedList<Move> & moves, LinkedList<Move> & captures)
+void ChessBoard::getBishopMoves(int figure, int pos, list<Move> & moves, list<Move> & captures)
 {
 	Move new_move;
 	int target_pos, target_figure, row, col, i, j;
@@ -579,7 +637,7 @@ void ChessBoard::getBishopMoves(int figure, int pos, LinkedList<Move> & moves, L
 			{
 				new_move.to = target_pos;
 				new_move.capture = target_figure;
-				captures.append(new_move);
+				captures.push_back(new_move);
 			}
 
 			break;
@@ -588,7 +646,7 @@ void ChessBoard::getBishopMoves(int figure, int pos, LinkedList<Move> & moves, L
 		{
 			new_move.to = target_pos;
 			new_move.capture = target_figure;
-			moves.append(new_move);
+			moves.push_back(new_move);
 		}
 	}
 	
@@ -602,7 +660,7 @@ void ChessBoard::getBishopMoves(int figure, int pos, LinkedList<Move> & moves, L
 			{
 				new_move.to = target_pos;
 				new_move.capture = target_figure;
-				captures.append(new_move);
+				captures.push_back(new_move);
 			}
 			
 			break;
@@ -611,7 +669,7 @@ void ChessBoard::getBishopMoves(int figure, int pos, LinkedList<Move> & moves, L
 		{
 			new_move.to = target_pos;
 			new_move.capture = target_figure;
-			moves.append(new_move);
+			moves.push_back(new_move);
 		}
 	}
 
@@ -625,7 +683,7 @@ void ChessBoard::getBishopMoves(int figure, int pos, LinkedList<Move> & moves, L
 			{
 				new_move.to = target_pos;
 				new_move.capture = target_figure;
-				captures.append(new_move);
+				captures.push_back(new_move);
 			}
 			
 			break;
@@ -634,7 +692,7 @@ void ChessBoard::getBishopMoves(int figure, int pos, LinkedList<Move> & moves, L
 		{
 			new_move.to = target_pos;
 			new_move.capture = target_figure;
-			moves.append(new_move);
+			moves.push_back(new_move);
 		}
 	}
 
@@ -648,7 +706,7 @@ void ChessBoard::getBishopMoves(int figure, int pos, LinkedList<Move> & moves, L
 			{
 				new_move.to = target_pos;
 				new_move.capture = target_figure;
-				captures.append(new_move);
+				captures.push_back(new_move);
 			}
 			
 			break;
@@ -657,12 +715,12 @@ void ChessBoard::getBishopMoves(int figure, int pos, LinkedList<Move> & moves, L
 		{
 			new_move.to = target_pos;
 			new_move.capture = target_figure;
-			moves.append(new_move);
+			moves.push_back(new_move);
 		}
 	}
 }
 
-void ChessBoard::getQueenMoves(int figure, int pos, LinkedList<Move> & moves, LinkedList<Move> & captures)
+void ChessBoard::getQueenMoves(int figure, int pos, list<Move> & moves, list<Move> & captures)
 {
 	// Queen is just the "cartesian product" of Rook and Bishop
 	this->getRookMoves(figure, pos, moves, captures);
@@ -670,7 +728,7 @@ void ChessBoard::getQueenMoves(int figure, int pos, LinkedList<Move> & moves, Li
 }
 
 
-void ChessBoard::getKingMoves(int figure, int pos, LinkedList<Move> & moves, LinkedList<Move> & captures)
+void ChessBoard::getKingMoves(int figure, int pos, list<Move> & moves, list<Move> & captures)
 {
 	Move new_move;
 	int target_pos, target_figure, row, col;
@@ -696,14 +754,14 @@ void ChessBoard::getKingMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 				{
 					new_move.capture = target_figure;
 					new_move.to = target_pos;
-					captures.append(new_move);
+					captures.push_back(new_move);
 				}
 			}
 			else
 			{
 				new_move.to = target_pos;
 				new_move.capture = target_figure;
-				moves.append(new_move);
+				moves.push_back(new_move);
 			}
 		}
 		
@@ -715,14 +773,14 @@ void ChessBoard::getKingMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 			{
 				new_move.capture = target_figure;
 				new_move.to = target_pos;
-				captures.append(new_move);
+				captures.push_back(new_move);
 			}
 		}
 		else
 		{
 			new_move.to = target_pos;
 			new_move.capture = target_figure;
-			moves.append(new_move);
+			moves.push_back(new_move);
 		}
 		
 		// 1.3 down
@@ -735,14 +793,14 @@ void ChessBoard::getKingMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 				{
 					new_move.capture = target_figure;
 					new_move.to = target_pos;
-					captures.append(new_move);
+					captures.push_back(new_move);
 				}
 			}
 			else
 			{
 				new_move.to = target_pos;
 				new_move.capture = target_figure;
-				moves.append(new_move);
+				moves.push_back(new_move);
 			}
 		}
 	}
@@ -760,14 +818,14 @@ void ChessBoard::getKingMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 				{
 					new_move.capture = target_figure;
 					new_move.to = target_pos;
-					captures.append(new_move);
+					captures.push_back(new_move);
 				}
 			}
 			else
 			{
 				new_move.to = target_pos;
 				new_move.capture = target_figure;
-				moves.append(new_move);
+				moves.push_back(new_move);
 			}
 		}
 		
@@ -779,14 +837,14 @@ void ChessBoard::getKingMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 			{
 				new_move.capture = target_figure;
 				new_move.to = target_pos;
-				captures.append(new_move);
+				captures.push_back(new_move);
 			}
 		}
 		else
 		{
 			new_move.to = target_pos;
 			new_move.capture = target_figure;
-			moves.append(new_move);
+			moves.push_back(new_move);
 		}
 		
 		// 2.3 down
@@ -799,14 +857,14 @@ void ChessBoard::getKingMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 				{
 					new_move.capture = target_figure;
 					new_move.to = target_pos;
-					captures.append(new_move);
+					captures.push_back(new_move);
 				}
 			}
 			else
 			{
 				new_move.to = target_pos;
 				new_move.capture = target_figure;
-				moves.append(new_move);
+				moves.push_back(new_move);
 			}
 		}
 	}
@@ -822,14 +880,14 @@ void ChessBoard::getKingMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 			{
 				new_move.capture = target_figure;
 				new_move.to = target_pos;
-				captures.append(new_move);
+				captures.push_back(new_move);
 			}
 		}
 		else
 		{
 			new_move.to = target_pos;
 			new_move.capture = target_figure;
-			moves.append(new_move);
+			moves.push_back(new_move);
 		}	
 	}
 	
@@ -844,14 +902,14 @@ void ChessBoard::getKingMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 			{
 				new_move.capture = target_figure;
 				new_move.to = target_pos;
-				captures.append(new_move);
+				captures.push_back(new_move);
 			}
 		}
 		else
 		{
 			new_move.to = target_pos;
 			new_move.capture = target_figure;
-			moves.append(new_move);
+			moves.push_back(new_move);
 		}	
 	}
 
@@ -873,7 +931,7 @@ void ChessBoard::getKingMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 					{
 						new_move.capture = EMPTY;
 						new_move.to = IS_BLACK(figure) ? G8 : G1;
-						moves.append(new_move);
+						moves.push_back(new_move);
 					}
 				}
 			}
@@ -897,7 +955,7 @@ void ChessBoard::getKingMoves(int figure, int pos, LinkedList<Move> & moves, Lin
 						{
 							new_move.capture = EMPTY;
 							new_move.to = IS_BLACK(figure) ? C8 : C1;
-							moves.append(new_move);
+							moves.push_back(new_move);
 						}
 					}
 				}

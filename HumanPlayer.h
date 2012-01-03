@@ -3,6 +3,9 @@
 
 #include "ChessPlayer.h"
 
+class ChessBoard;
+class Move;
+
 class HumanPlayer: public ChessPlayer {
 
 	public:

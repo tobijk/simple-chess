@@ -1,7 +1,7 @@
 //#include <mcheck.h>
 #include <cstdlib>
 #include <cstdio>
-#include "LinkedList.h"
+#include <list>
 #include "ChessBoard.h"
 #include "HumanPlayer.h"
 #include "AIPlayer.h"
@@ -9,8 +9,7 @@
 int main(void) {
 
 	ChessBoard board;
-	LinkedList<Move> regulars, nulls;
-	ListIterator<Move> iter;
+	list<Move> regulars, nulls;
 	int turn = WHITE;
 	Move move;
 	bool found;
@@ -36,18 +35,15 @@ int main(void) {
 		
 		// if player has a move
 		if(found) {
-			
+
 			// get all moves
 			regulars.clear();
 			nulls.clear();
 			board.getMoves(turn, regulars, regulars, nulls);
-			
+
 			// execute maintenance moves
-			iter = nulls.getIterator();
-			while(*iter) {
-				board.move((*iter)->value);
-				iter++;
-			}
+			for(list<Move>::iterator it = nulls.begin(); it != nulls.end(); ++it)
+				board.move(*it);
 			
 			// execute move
 			board.move(move);

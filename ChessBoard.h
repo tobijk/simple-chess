@@ -1,7 +1,7 @@
 #ifndef CHESS_BOARD_H_INCLUDED
 #define CHESS_BOARD_H_INCLUDED
 
-#include "LinkedList.h"
+using namespace std;
 
 // Pieces defined in lower 4 bits
 #define EMPTY	0x00	// Empty square
@@ -53,60 +53,12 @@ struct Move
 	/*
 	* Prints sth. like "Black queen from D8 to D7."
 	*/
-	void print(void) {
-
-		const char * field_name[] = {
-			"A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1",
-			"A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2",
-			"A3", "B3", "C3", "D3", "E3", "F3", "G3", "H3",
-			"A4", "B4", "C4", "D4", "E4", "F4", "G4", "H4",
-			"A5", "B5", "C5", "D5", "E5", "F5", "G5", "H5",
-			"A6", "B6", "C6", "D6", "E6", "F6", "G6", "H6",
-			"A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7",
-			"A8", "B8", "C8", "D8", "E8", "F8", "G8", "H8"
-		};		
+	void print(void);
 	
-		if(IS_BLACK(figure))
-			printf("\n\n   Black ");
-		else 
-			printf("\n\n   White ");
-
-		switch(FIGURE(figure)) {
-			case PAWN:
-				printf("pawn ");
-				break;
-			case ROOK:
-				printf("rook ");
-				break;
-			case KNIGHT:
-				printf("knight ");
-				break;
-			case BISHOP:
-				printf("bishop ");
-				break;
-			case QUEEN:
-				printf("queen ");
-				break;
-			case KING:
-				printf("king ");
-				break;
-		}
-		
-		printf("from %s to %s:\n", field_name[(int)from], field_name[(int)to]);
-	}
-	
-	bool operator==(Move & b) {
-		if(from != b.from)
-			return false;
-		if(to != b.to)
-			return false;
-		if(capture != b.capture)
-			return false;
-		if(figure != b.figure)
-			return false;
-			
-		return true;
-	}
+	/*
+	* True if moves are equal.
+	*/
+	bool operator==(Move & b);
 
 	char figure;	// figure which is moved
 	char from, to;	// board is seen one-dimensional
@@ -137,37 +89,37 @@ class ChessBoard
 		/*
 		* Generates all moves for one side.
 		*/
-		void getMoves(int color, LinkedList<Move> & moves, LinkedList<Move> & captures, LinkedList<Move> & null_moves);
+		void getMoves(int color, list<Move> & moves, list<Move> & captures, list<Move> & null_moves);
 
 		/*
 		* All possible moves for a pawn piece.
 		*/
-		void getPawnMoves(int figure, int pos, LinkedList<Move> & moves, LinkedList<Move> & captures, LinkedList<Move> & null_moves);
+		void getPawnMoves(int figure, int pos, list<Move> & moves, list<Move> & captures, list<Move> & null_moves);
 		
 		/*
 		* All possible moves for a rook piece.
 		*/
-		void getRookMoves(int figure, int pos, LinkedList<Move> & moves, LinkedList<Move> & captures);
+		void getRookMoves(int figure, int pos, list<Move> & moves, list<Move> & captures);
 		
 		/*
 		* All possible moves for a knight piece.
 		*/
-		void getKnightMoves(int figure, int pos, LinkedList<Move> & moves, LinkedList<Move> & captures);
+		void getKnightMoves(int figure, int pos, list<Move> & moves, list<Move> & captures);
 		
 		/*
 		* All possible moves for a bishop piece.
 		*/
-		void getBishopMoves(int figure, int pos, LinkedList<Move> & moves, LinkedList<Move> & captures);
+		void getBishopMoves(int figure, int pos, list<Move> & moves, list<Move> & captures);
 		
 		/*
 		* All possible moves for a queen piece.
 		*/
-		void getQueenMoves(int figure, int pos, LinkedList<Move> & moves, LinkedList<Move> & captures);
+		void getQueenMoves(int figure, int pos, list<Move> & moves, list<Move> & captures);
 
 		/*
 		* All possible moves for a king piece.
 		*/
-		void getKingMoves(int figure, int pos, LinkedList<Move> & moves, LinkedList<Move> & captures);
+		void getKingMoves(int figure, int pos, list<Move> & moves, list<Move> & captures);
 
 		/*
 		* Returns true, if this square is vulnerable to the opponent.

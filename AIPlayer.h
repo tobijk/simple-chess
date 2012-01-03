@@ -1,7 +1,6 @@
 #ifndef AI_PLAYER_H_INCLUDED
 #define AI_PLAYER_H_INCLUDED
 
-#include "ChessBoard.h"
 #include "ChessPlayer.h"
 
 // Pieces' values
@@ -13,6 +12,8 @@
 #define QUEEN_VALUE  300	// 1x
 #define KING_VALUE 	 ((PAWN_VALUE * 8) + (ROOK_VALUE * 2) \
 						+ (KNIGHT_VALUE * 2) + (BISHOP_VALUE * 2) + QUEEN_VALUE + WIN_VALUE)
+
+class ChessBoard;
 
 class AIPlayer: public ChessPlayer {
 
@@ -26,11 +27,6 @@ class AIPlayer: public ChessPlayer {
 		* Ask player what to do next
 		*/
 		bool getMove(ChessBoard & board, Move & move);
-
-		/*
-		* MinMax search for best possible outcome
-		*/ 
-		int evalMinMax(ChessBoard & board, int color, int depth);
 
 		/*
 		* MinMax search for best possible outcome

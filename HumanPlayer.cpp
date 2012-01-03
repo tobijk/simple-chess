@@ -1,5 +1,9 @@
+#include <cstdlib>
+#include <cstdio>
+#include <list>
 #include <cctype>
 #include "HumanPlayer.h"
+#include "ChessBoard.h"
 
 HumanPlayer::HumanPlayer(int color)
  : ChessPlayer(color)
@@ -10,8 +14,7 @@ HumanPlayer::~HumanPlayer()
 
 bool HumanPlayer::getMove(ChessBoard & board, Move & move)
 {
-	LinkedList<Move> regulars, nulls;
-	ListIterator<Move> iter;
+	list<Move> regulars, nulls;
 	char * input;
 	bool found, done = false;
 
@@ -20,22 +23,18 @@ bool HumanPlayer::getMove(ChessBoard & board, Move & move)
 
 	while(!done) {
 
-		iter = regulars.getIterator();
 		found = false;
-
-		// check if we are check- or stalemate
-		while(*iter && !found) {
-			board.move((*iter)->value);
+		for(list<Move>::iterator it = regulars.begin(); it != regulars.end() && !found; ++it)
+		{
+			board.move(*it);
 			if(!board.isVulnerable((this->color ? board.black_king_pos : board.white_king_pos), this->color)) {
 				found = true;
 			}
-			board.undoMove((*iter)->value);
-			iter++;
+			board.undoMove(*it);
 		}
 		
-		if(!found) {
+		if(!found)
 			return false;
-		}
 
 		while(true) {
 			printf("\n>>");
@@ -50,21 +49,16 @@ bool HumanPlayer::getMove(ChessBoard & board, Move & move)
 			break;
 		}
 
-		// loop over moves
-		iter = regulars.getIterator();
 		found = false;
-
-		while(*iter) {
-			if(move.from == ((*iter)->value).from) {
-				if(move.to == ((*iter)->value).to) {
-					move = (*iter)->value;
+		for(list<Move>::iterator it = regulars.begin(); it != regulars.end(); ++it)
+		{
+			if(move.from == (*it).from && move.to == (*it).to) {
+					move = *it;
 					found = true;
 					break;
-				}
 			}
-			iter++;
 		}
-	
+
 		if(!found) {
 			printf("Invalid move. Try again.\n");
 			continue;

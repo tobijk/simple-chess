@@ -1,6 +1,11 @@
 #include <cstdlib>
 #include <ctime>
+#include <list>
+#include <vector>
 #include "AIPlayer.h"
+#include "ChessBoard.h"
+
+using namespace std;
 
 AIPlayer::AIPlayer(int color, int search_depth)
  : ChessPlayer(color),
@@ -14,36 +19,32 @@ AIPlayer::~AIPlayer()
 
 bool AIPlayer::getMove(ChessBoard & board, Move & move)
 {
-	LinkedList<Move> regulars, nulls, candidates;
-	ListIterator<Move> iter;
-        bool quiescent = false;
+	list<Move> regulars, nulls;
+	vector<Move> candidates;
+    bool quiescent = false;
 	int best, tmp;
 
 	// first assume we are loosing
 	best = -KING_VALUE;
-	
+
 	// get all moves
 	board.getMoves(this->color, regulars, regulars, nulls);
 
 	// execute maintenance moves
-	iter = nulls.getIterator();
-	while(*iter) {
-		board.move((*iter)->value);
-		iter++;
-	}
+	for(list<Move>::iterator it = nulls.begin(); it != nulls.end(); ++it)
+		board.move(*it);
 
 	// loop over all moves
-	iter = regulars.getIterator();
-	while(*iter) {
-
+	for(list<Move>::iterator it = regulars.begin(); it != regulars.end(); ++it)
+	{
 		// execute move
-		board.move((*iter)->value);
+		board.move(*it);
 
 		// check if own king is vulnerable now
 		if(!board.isVulnerable((this->color ? board.black_king_pos : board.white_king_pos), this->color)) {
 
-			if(((*iter)->value).capture != EMPTY) {
-                            quiescent = true;
+			if((*it).capture != EMPTY) {
+				quiescent = true;
 			}
 
 			// recursion
@@ -51,24 +52,20 @@ bool AIPlayer::getMove(ChessBoard & board, Move & move)
 			if(tmp > best) {
 				best = tmp;
 				candidates.clear();
-				candidates.append((*iter)->value);
+				candidates.push_back(*it);
 			}
 			else if(tmp == best) {
-				candidates.append((*iter)->value);
+				candidates.push_back(*it);
 			}
 		}
 
 		// undo move and inc iterator
-		board.undoMove((*iter)->value);
-		iter++;
+		board.undoMove(*it);
 	}
 
 	// undo maintenance moves
-	iter = nulls.getIterator();
-	while(*iter) {
-		board.undoMove((*iter)->value);
-		iter++;
-	}
+	for(list<Move>::iterator it = nulls.begin(); it != nulls.end(); ++it)
+		board.undoMove(*it);
 
 	// loosing the game?
 	if(best < -WIN_VALUE) {
@@ -76,16 +73,14 @@ bool AIPlayer::getMove(ChessBoard & board, Move & move)
 	}
 	else {
 		// select random move from candidate moves
-		move = candidates.getItem(rand() % candidates.getSize())->value;
+		move = candidates[rand() % candidates.size()];
 		return true;
 	}
 }
 
-
 int AIPlayer::evalAlphaBeta(ChessBoard & board, int color, int search_depth, int alpha, int beta, bool quiescent)
 {
-	LinkedList<Move> regulars, nulls;
-	ListIterator<Move> iter;
+	list<Move> regulars, nulls;
 	int best, tmp;
 
 	if(search_depth <= 0 && !quiescent) {
@@ -102,28 +97,25 @@ int AIPlayer::evalAlphaBeta(ChessBoard & board, int color, int search_depth, int
 	board.getMoves(color, regulars, regulars, nulls);
 	
 	// execute maintenance moves
-	iter = nulls.getIterator();
-	while(*iter) {
-		board.move((*iter)->value);
-		iter++;
-	}
+	for(list<Move>::iterator it = nulls.begin(); it != nulls.end(); ++it)
+		board.move(*it);
 	
 	// loop over all moves
-	iter = regulars.getIterator();
-	while((*iter) && (alpha <= beta)) {
-
+	for(list<Move>::iterator it = regulars.begin();
+		alpha <= beta && it != regulars.end(); ++it)
+	{
 		// execute move
-		board.move((*iter)->value);
+		board.move(*it);
 
 		// check if own king is vulnerable now
 		if(!board.isVulnerable((color ? board.black_king_pos : board.white_king_pos), color)) {
 
-			if(((*iter)->value).capture == EMPTY) {
-                            quiescent = false;
+			if((*it).capture == EMPTY) {
+				quiescent = false;
 			}
-                        else {
-                            quiescent = true;
-                        }
+            else {
+                quiescent = true;
+            }
 
 			// recursion 'n' pruning
 			tmp = -evalAlphaBeta(board, TOGGLE_COLOR(color), search_depth - 1, -beta, -alpha, quiescent);
@@ -136,74 +128,12 @@ int AIPlayer::evalAlphaBeta(ChessBoard & board, int color, int search_depth, int
 		}
 
 		// undo move and inc iterator
-		board.undoMove((*iter)->value);
-		iter++;
+		board.undoMove(*it);
 	}
 	
 	// undo maintenance moves
-	iter = nulls.getIterator();
-	while(*iter) {
-		board.undoMove((*iter)->value);
-		iter++;
-	}
-	
-	return best;
-}
-
-int AIPlayer::evalMinMax(ChessBoard & board, int color, int search_depth)
-{
-	LinkedList<Move> regulars, nulls;
-	ListIterator<Move> iter;
-	int best, tmp;
-
-	if(search_depth <= 0) {
-		if(color)
-			return -evaluateBoard(board);
-		else
-			return +evaluateBoard(board);
-	}
-
-	// first assume we are loosing
-	best = -WIN_VALUE;
-
-	// get all moves
-	board.getMoves(color, regulars, regulars, nulls);
-	
-	// execute maintenance moves
-	iter = nulls.getIterator();
-	while(*iter) {
-		board.move((*iter)->value);
-		iter++;
-	}
-	
-	// loop over all moves
-	iter = regulars.getIterator();
-	while(*iter) {
-
-		// execute move
-		board.move((*iter)->value);
-
-		// check if own king is vulnerable now
-		if(!board.isVulnerable((color ? board.black_king_pos : board.white_king_pos), color)) {
-
-			// recursion
-			tmp = -evalMinMax(board, TOGGLE_COLOR(color), search_depth - 1);
-			if(tmp > best) {
-				best = tmp;
-			}
-		}
-
-		// undo move and inc iterator
-		board.undoMove((*iter)->value);
-		iter++;
-	}
-	
-	// undo maintenance moves
-	iter = nulls.getIterator();
-	while(*iter) {
-		board.undoMove((*iter)->value);
-		iter++;
-	}
+	for(list<Move>::iterator it = nulls.begin(); it != nulls.end(); ++it)
+		board.undoMove(*it);
 	
 	return best;
 }
@@ -245,3 +175,4 @@ int AIPlayer::evaluateBoard(ChessBoard & board)
 	
 	return sum;
 }
+
