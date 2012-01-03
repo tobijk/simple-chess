@@ -108,12 +108,10 @@ int AIPlayer::evalAlphaBeta(ChessBoard & board, int color, int search_depth, int
 		// check if own king is vulnerable now
 		if(!board.isVulnerable((color ? board.black_king_pos : board.white_king_pos), color)) {
 
-			if((*it).capture == EMPTY) {
+			if((*it).capture == EMPTY)
 				quiescent = false;
-			}
-            else {
+            else
                 quiescent = true;
-            }
 
 			// recursion 'n' pruning
 			tmp = -evalAlphaBeta(board, TOGGLE_COLOR(color), search_depth - 1, -beta, -alpha, quiescent);
