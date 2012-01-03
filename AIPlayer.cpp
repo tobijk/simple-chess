@@ -5,6 +5,8 @@
 #include "AIPlayer.h"
 #include "ChessBoard.h"
 
+using namespace std;
+
 AIPlayer::AIPlayer(int color, int search_depth)
  : ChessPlayer(color),
    search_depth(search_depth)

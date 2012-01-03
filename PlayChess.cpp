@@ -6,6 +6,8 @@
 #include "HumanPlayer.h"
 #include "AIPlayer.h"
 
+using namespace std;
+
 int main(void) {
 
 	ChessBoard board;

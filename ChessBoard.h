@@ -1,8 +1,6 @@
 #ifndef CHESS_BOARD_H_INCLUDED
 #define CHESS_BOARD_H_INCLUDED
 
-using namespace std;
-
 // Pieces defined in lower 4 bits
 #define EMPTY	0x00	// Empty square
 #define PAWN	0x01	// Bauer
@@ -87,37 +85,44 @@ struct ChessBoard
 	/*
 	* Generates all moves for one side.
 	*/
-	void getMoves(int color, list<Move> & moves, list<Move> & captures, list<Move> & null_moves);
+	void getMoves(int color, std::list<Move> & moves,
+		std::list<Move> & captures, std::list<Move> & null_moves);
 
 	/*
 	* All possible moves for a pawn piece.
 	*/
-	void getPawnMoves(int figure, int pos, list<Move> & moves, list<Move> & captures, list<Move> & null_moves) const;
+	void getPawnMoves(int figure, int pos, std::list<Move> & moves,
+		std::list<Move> & captures, std::list<Move> & null_moves) const;
 	
 	/*
 	* All possible moves for a rook piece.
 	*/
-	void getRookMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
+	void getRookMoves(int figure, int pos, std::list<Move> & moves,
+		std::list<Move> & captures) const;
 	
 	/*
 	* All possible moves for a knight piece.
 	*/
-	void getKnightMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
+	void getKnightMoves(int figure, int pos, std::list<Move> & moves,
+		std::list<Move> & captures) const;
 	
 	/*
 	* All possible moves for a bishop piece.
 	*/
-	void getBishopMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
+	void getBishopMoves(int figure, int pos, std::list<Move> & moves,
+		std::list<Move> & captures) const;
 	
 	/*
 	* All possible moves for a queen piece.
 	*/
-	void getQueenMoves(int figure, int pos, list<Move> & moves, list<Move> & captures) const;
+	void getQueenMoves(int figure, int pos, std::list<Move> & moves,
+		std::list<Move> & captures) const;
 
 	/*
 	* All possible moves for a king piece.
 	*/
-	void getKingMoves(int figure, int pos, list<Move> & moves, list<Move> & captures);
+	void getKingMoves(int figure, int pos, std::list<Move> & moves,
+		std::list<Move> & captures);
 
 	/*
 	* Returns true, if this square is vulnerable to the opponent.

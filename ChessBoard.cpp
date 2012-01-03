@@ -3,6 +3,8 @@
 #include <list>
 #include "ChessBoard.h"
 
+using namespace std;
+
 void Move::print(void) const {
 
 	const char * field_name[] = {

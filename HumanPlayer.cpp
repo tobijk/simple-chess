@@ -6,6 +6,8 @@
 #include "HumanPlayer.h"
 #include "ChessBoard.h"
 
+using namespace std;
+
 HumanPlayer::HumanPlayer(int color)
  : ChessPlayer(color)
 {}
