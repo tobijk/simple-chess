@@ -1,7 +1,7 @@
 #ifndef AI_PLAYER_H_INCLUDED
 #define AI_PLAYER_H_INCLUDED
 
-#include "ChessPlayer.h"
+#include "chessplayer.h"
 
 // Pieces' values
 #define WIN_VALUE  50000	// win the game

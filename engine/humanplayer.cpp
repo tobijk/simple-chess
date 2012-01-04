@@ -3,8 +3,8 @@
 #include <list>
 #include <cctype>
 #include <cstring>
-#include "HumanPlayer.h"
-#include "ChessBoard.h"
+#include "humanplayer.h"
+#include "chessboard.h"
 
 using namespace std;
 

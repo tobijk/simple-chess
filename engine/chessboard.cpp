@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <cstring>
 #include <list>
-#include "ChessBoard.h"
+#include "chessboard.h"
 
 using namespace std;
 

@@ -2,9 +2,9 @@
 #include <cstdlib>
 #include <cstdio>
 #include <list>
-#include "ChessBoard.h"
-#include "HumanPlayer.h"
-#include "AIPlayer.h"
+#include "chessboard.h"
+#include "humanplayer.h"
+#include "aiplayer.h"
 
 using namespace std;
 

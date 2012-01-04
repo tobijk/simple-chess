@@ -2,8 +2,8 @@
 #include <ctime>
 #include <list>
 #include <vector>
-#include "AIPlayer.h"
-#include "ChessBoard.h"
+#include "aiplayer.h"
+#include "chessboard.h"
 
 using namespace std;
 
