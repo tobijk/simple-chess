@@ -8,6 +8,8 @@ class ChessPlayer
 {
 	public:
 
+		enum Status { Normal, InCheck, Stalemate, Checkmate };
+
 		ChessPlayer(int color)
 		 : color(color)
 		{};

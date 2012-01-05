@@ -18,50 +18,50 @@ int main(void) {
 
 	// Initialize players
 	AIPlayer black(BLACK, 2);
-	HumanPlayer white(WHITE);
+	AIPlayer white(WHITE, 2);
 
 	// setup board
 	board.initDefaultSetup();
 
-	do {
+	for(;;) {
 		// show board
 		board.print();
 
 		// query player's choice
-		if(turn) {
+		if(turn)
 			found = black.getMove(board, move);
-		}
-		else {
+		else
 			found = white.getMove(board, move);
-		}
-		
-		// if player has a move
-		if(found) {
 
-			// get all moves
-			regulars.clear();
-			nulls.clear();
-			board.getMoves(turn, regulars, regulars, nulls);
+		if(!found)
+			break;
 
-			// execute maintenance moves
-			for(list<Move>::iterator it = nulls.begin(); it != nulls.end(); ++it)
-				board.move(*it);
-			
-			// execute move
-			board.move(move);
-			move.print();
-		}
+		// if player has a move get all moves
+		regulars.clear();
+		nulls.clear();
+		board.getMoves(turn, regulars, regulars, nulls);
+
+		// execute maintenance moves
+		for(list<Move>::iterator it = nulls.begin(); it != nulls.end(); ++it)
+			board.move(*it);
+
+		// execute move
+		board.move(move);
+		move.print();
 
 		// opponents turn
 		turn = TOGGLE_COLOR(turn);
 	}
-	while(found);
 
-	// who won?
-	if(turn) {
-		printf("\n   Black wins!\n\n");
-	}
-	else {
-		printf("\n   White wins!\n\n");
+	ChessPlayer::Status status = board.getPlayerStatus(turn);
+
+	switch(status)
+	{
+		case ChessPlayer::Checkmate:
+			printf("Checkmate\n");
+			break;
+		case ChessPlayer::Stalemate:
+			printf("Stalemate\n");
+			break;
 	}
 }

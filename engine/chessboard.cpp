@@ -2,6 +2,7 @@
 #include <cstring>
 #include <list>
 #include "chessboard.h"
+#include "chessplayer.h"
 
 using namespace std;
 
@@ -19,9 +20,9 @@ void Move::print(void) const {
 	};		
 
 	if(IS_BLACK(figure))
-		printf("\n\n   Black ");
+		printf("   Black ");
 	else 
-		printf("\n\n   White ");
+		printf("   White ");
 
 	switch(FIGURE(figure)) {
 		case PAWN:
@@ -86,7 +87,7 @@ void ChessBoard::print(void) const
 		}
 		printf("|\n%d |___|___|___|___|___|___|___|___|\n  ", row + 1);
 	}
-	printf("  A   B   C   D   E   F   G   H  \n");
+	printf("  A   B   C   D   E   F   G   H  \n\n");
 }
 
 char ChessBoard::getASCIIrepr(int figure) const
@@ -1283,6 +1284,59 @@ bool ChessBoard::isVulnerable(int pos, int figure) const
 	}	
 
 	return false;
+}
+
+bool ChessBoard::isValidMove(int color, Move & move)
+{
+	bool valid = false;
+	list<Move> regulars, nulls;
+
+	getMoves(color, regulars, regulars, nulls);
+
+	for(list<Move>::iterator it = regulars.begin(); it != regulars.end() && !valid; ++it)
+	{
+		if(move.from == (*it).from && move.to == (*it).to)
+		{
+			move = *it;
+
+			this->move(move);
+			if(!isVulnerable(color ? black_king_pos : white_king_pos, color))
+				valid = true;
+			undoMove(*it);
+		}
+	}
+
+	return valid;
+}
+
+ChessPlayer::Status ChessBoard::getPlayerStatus(int color)
+{
+	bool king_vulnerable = false, can_move = false;
+	list<Move> regulars, nulls;
+
+	getMoves(color, regulars, regulars, nulls);
+
+	if(isVulnerable(color ? black_king_pos : white_king_pos, color))
+		king_vulnerable = true;
+
+	for(list<Move>::iterator it = regulars.begin(); it != regulars.end() && !can_move; ++it)
+	{
+		this->move(*it);
+		if(!isVulnerable(color ? black_king_pos : white_king_pos, color))
+		{
+			can_move = true;
+		}
+		undoMove(*it);
+	}
+
+	if(king_vulnerable && can_move)
+		return ChessPlayer::InCheck;
+	if(king_vulnerable && !can_move)
+		return ChessPlayer::Checkmate;
+	if(!king_vulnerable && !can_move)
+		return ChessPlayer::Stalemate;
+
+	return ChessPlayer::Normal;
 }
 
 void ChessBoard::move(const Move & move)

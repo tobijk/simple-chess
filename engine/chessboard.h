@@ -1,6 +1,8 @@
 #ifndef CHESS_BOARD_H_INCLUDED
 #define CHESS_BOARD_H_INCLUDED
 
+#include "chessplayer.h"
+
 // Pieces defined in lower 4 bits
 #define EMPTY	0x00	// Empty square
 #define PAWN	0x01	// Bauer
@@ -125,11 +127,25 @@ struct ChessBoard
 		std::list<Move> & captures);
 
 	/*
-	* Returns true, if this square is vulnerable to the opponent.
+	* Returns true, if the square given by pos is vulnerable to the opponent.
 	* This is used to determine if castling is legal or if kings are in check.
 	* En passant is not taken into account.
 	*/
 	bool isVulnerable(int pos, int color) const;
+
+	/*
+	* True if move is a valid move for player of given color. Please note, that
+	* a move that puts the player's own king in check, is also treated as
+	* invalid.
+	*/
+	bool isValidMove(int color, Move & move);
+
+	/*
+	* Returns the status of player of given color. This method is not declared
+	* const, because it needs to simulate moves on the board to draw a
+	* conclusion.
+	*/
+	ChessPlayer::Status getPlayerStatus(int color);
 
 	/*
 	* Move and undo moves

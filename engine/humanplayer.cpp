@@ -19,64 +19,29 @@ bool HumanPlayer::getMove(ChessBoard & board, Move & move) const
 {
 	list<Move> regulars, nulls;
 	char * input;
-	bool found, done = false;
 
-	// get all moves
-	board.getMoves(this->color, regulars, regulars, nulls);
+	for(;;) {
+		printf(">> ");
 
-	while(!done) {
-
-		found = false;
-		for(list<Move>::iterator it = regulars.begin(); it != regulars.end() && !found; ++it)
-		{
-			board.move(*it);
-			if(!board.isVulnerable((this->color ? board.black_king_pos : board.white_king_pos), this->color)) {
-				found = true;
-			}
-			board.undoMove(*it);
-		}
-		
-		if(!found)
-			return false;
-
-		while(true) {
-			printf("\n>>");
-			if((input = readInput()) == NULL) {
-				printf("Could not read input. Try again.\n");
-				continue;
-			}
-			if(!processInput(input, move)) {
-				printf("Error while parsing input. Try again.\n");
-				continue;
-			}
-			break;
-		}
-
-		found = false;
-		for(list<Move>::iterator it = regulars.begin(); it != regulars.end(); ++it)
-		{
-			if(move.from == (*it).from && move.to == (*it).to) {
-					move = *it;
-					found = true;
-					break;
-			}
-		}
-
-		if(!found) {
-			printf("Invalid move. Try again.\n");
+		if((input = readInput()) == NULL) {
+			printf("Could not read input.\n");
 			continue;
 		}
-	
-		board.move(move);
-		if(board.isVulnerable(this->color ? board.black_king_pos : board.white_king_pos, this->color)) {
-			printf("Invalid move, putting your king in jeopardy.\n");
+
+		if(!processInput(input, move)) {
+			printf("Error while parsing input.\n");
+			continue;
 		}
-		else {
-			done = true;
+
+		if(!board.isValidMove(color, move)) {
+			printf("Invalid move.\n");
+			continue;
 		}
-		board.undoMove(move);
+
+		printf("\n");
+		break;
 	}
-	
+
 	return true;
 }
 
