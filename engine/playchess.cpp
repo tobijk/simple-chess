@@ -17,8 +17,8 @@ int main(void) {
 	bool found;
 
 	// Initialize players
-	AIPlayer black(BLACK, 2);
-	AIPlayer white(WHITE, 2);
+	AIPlayer black(BLACK, 3);
+	HumanPlayer white(WHITE);
 
 	// setup board
 	board.initDefaultSetup();
